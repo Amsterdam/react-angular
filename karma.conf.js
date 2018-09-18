@@ -2,7 +2,7 @@
 // Generated on Thu Aug 11 2016 13:51:25 GMT+0200 (CEST)
 var webpack = require('webpack');
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -38,7 +38,8 @@ module.exports = function(config) {
     colors: true,
 
     // level of logging
-    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN ||
+    // config.LOG_INFO || config.LOG_DEBUG
     logLevel: config.LOG_INFO,
 
     // enable / disable watching file and executing tests whenever any file changes
@@ -58,14 +59,14 @@ module.exports = function(config) {
     webpack: {
       module: {
         loaders: [
-          { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader' }
-        ]
+          { test: /\.jsx?$/, exclude: /node_modules/, loader: 'babel-loader' },
+        ],
       },
       watch: true,
       devtool: 'inline-source-map',
     },
     webpackServer: {
-      noInfo: true
+      noInfo: true,
     },
   });
 };
