@@ -31,28 +31,38 @@ describe('AngularWrapper', () => {
     expect(element.instance().angularComponent).toEqual(<plop boo="{{boo}}" foo="foo" />);
   });
 
-  it('should update the scope when props are updated', () => {
-    const element = shallow(
-      <AngularWrapper
-        moduleName="plopWrapper"
-        component="plop"
-        bindings={{
-          foo: 'bar',
-        }}
-        interpolateBindings={{
-          boo: 'faz',
-        }}
-      />,
-    );
+  describe('bindings', () => {
+    let element;
 
-    element.instance().angularRef = { $scope: { $digest: jest.fn() } };
+    beforeEach(() => {
+      element = shallow(
+        <AngularWrapper
+          moduleName="plopWrapper"
+          component="plop"
+          bindings={{
+            foo: 'bar',
+          }}
+          interpolateBindings={{
+            boo: 'faz',
+          }}
+        />,
+      );
+    });
 
-    element.setProps({ interpolateBindings: { boo: 'qaz' } });
-    expect(element.instance().angularRef.$scope).toMatchObject({ boo: 'qaz', foo: 'bar' });
+    it('should update the scope when interpolateBindings are updated', () => {
+      element.instance().angularRef = { $scope: { $digest: jest.fn() } };
 
-    element.setProps({ bindings: { foo: 'baz' } });
-    expect(element.instance().angularRef.$scope).toMatchObject({ boo: 'qaz', foo: 'baz' });
+      element.setProps({ interpolateBindings: { boo: 'qaz' } });
+      expect(element.instance().angularRef.$scope).toMatchObject({ boo: 'qaz', foo: 'bar' });
+      expect(element.instance().angularRef.$scope.$digest).toHaveBeenCalled();
+    });
 
-    expect(element.instance().angularRef.$scope.$digest).toHaveBeenCalledTimes(2);
+    it('should update the scope when bindings are updated', () => {
+      element.instance().angularRef = { $scope: { $digest: jest.fn() } };
+
+      element.setProps({ bindings: { foo: 'baz' } });
+      expect(element.instance().angularRef.$scope).toMatchObject({ boo: 'faz', foo: 'baz' });
+      expect(element.instance().angularRef.$scope.$digest).toHaveBeenCalled();
+    });
   });
 });
