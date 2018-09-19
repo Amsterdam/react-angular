@@ -23,8 +23,55 @@ although it isn't materialized in dependencies.
 It should work fine with React 0.14+ and Angular 1.2+,
 but is really only tested with React 15 and Angular 1.5.
 
-Once installed, create the `react-angular` module and add it to your module's dependencies:
+## Usage
+**NOTE: We have 2 ways of mounting angular components in react.** As AngularWrapper uses AngularTemplate, our goal is to eventually combine these two in one component. Because of the major impact when doing so, we decided to have it separated for now.
 
+### Rendering Angular components in JSX using AngularWrapper
+1. From the example folder, just a regular angular module
+```js
+import angular from 'angular';
+
+angular
+  .module('ngExample', [])
+  .component('ngExampleComponent', {
+    template: '<div><h1>{{ctrl.message}}</h1><h2>{{ctrl.foo}}</h2></div>',
+    controllerAs: 'ctrl',
+    bindings: {
+      message: '@',
+      foo: '<',
+    },
+  });
+```
+
+2. To use the angular component in a react ecosystem:
+```js
+import { AngularWrapper } from 'react-angular';
+
+<AngularWrapper
+  moduleName="ngExampleWrapper"
+  component="ngExampleComponent"
+  dependencies={['ngExample']}
+  interpolateBindings={{
+    message,
+  }}
+  bindings={{
+    foo,
+  }}
+/>
+```
+
+- *modulename*: since AngularWrapper creates a new angular module, this should be unique
+- *component*: simply the angular component you want to render
+- *dependencies*: this should match the angular module name that is used by the angular component
+- *interpolateBindings*: props that match interpolate '@' bindings in the angular component
+- *bindings*: props that match one way '<' or two way '=' bindings in the angular component
+
+#### Running the example
+Make sure you can open the example folder with a local server. You could use `http-server` by installing it globally: `npm i -g http-server`
+- `npm run example` and then run `http-server ./example`
+
+### Rendering JSX Children using AngularTemplate
+When you directly want to use AngularTemplate, make sure your module has the following dependencies:
 ```js
 import { reactAngularModule } from 'react-angular';
 
@@ -39,8 +86,7 @@ angular.module('app', [reactAngularModule(false).name])
   ;
 ```
 
-## Usage
-### Rendering JSX Children
+Then in use in react like the following:
 ```js
 import React from 'react';
 import AngularTemplate from 'react-angular';
@@ -378,8 +424,7 @@ npm run test:watch
 ## Authors and license
 This library is licenced under the MIT licence (see LICENCE file).
 
-Authors:
-- Fabien Mauquié
+This repo is forked from [fmauquie/angular-react](https://github.com/fmauquie/react-angular)
 
 ## Changelog
 
