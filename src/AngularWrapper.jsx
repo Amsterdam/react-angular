@@ -40,7 +40,9 @@ class AngularWrapper extends Component {
     Object.keys(allBindings).forEach((key) => {
       this.angularRef.$scope[key] = allBindings[key];
     });
-    this.angularRef.$scope.$digest();
+    setTimeout(() => {
+      this.angularRef.$scope.$digest();
+    });
   }
 
   componentWillUnmount() {
