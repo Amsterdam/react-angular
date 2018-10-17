@@ -20,7 +20,6 @@ class AngularWrapper extends Component {
 
   componentDidMount() {
     const { moduleName, dependencies } = this.props;
-
     angular
       .module(`${moduleName}`, [...dependencies, reactAngularModule(false).name])
       .directive('exposeScope', () => ensureScopeAvailable())
@@ -53,14 +52,20 @@ class AngularWrapper extends Component {
   }
 
   buildAngularComponent = () => {
-    const { bindings, interpolateBindings, component } = this.props;
+    const {
+      bindings,
+      interpolateBindings,
+      component,
+      children,
+    } = this.props;
+
     const allBindings = { ...bindings, ...interpolateBindings };
     const angularAttributes = Object.keys(allBindings).reduce((acc, key) => {
       acc[camelCaseToDash(key)] = (key in interpolateBindings) ? `{{${key}}}` : key;
       return acc;
     }, {});
 
-    this.angularComponent = createElement(camelCaseToDash(component), angularAttributes);
+    this.angularComponent = createElement(camelCaseToDash(component), angularAttributes, children);
   };
 
   setRootRef = (angularApp) => {
@@ -107,7 +112,10 @@ AngularWrapper.defaultProps = {
 };
 
 AngularWrapper.propTypes = {
-  children: PropTypes.element,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
   component: PropTypes.string,
   moduleName: PropTypes.string.isRequired,
   dependencies: PropTypes.arrayOf(PropTypes.string),
