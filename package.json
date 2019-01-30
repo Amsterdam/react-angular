@@ -8,7 +8,7 @@
     "build": "npm run clean && babel src -d lib --source-maps",
     "build:watch": "npm run build -- -w",
     "example": "npx webpack --config ./example/webpack.config.js",
-    "test": "npm run test:karma && npm run test:jest",
+    "test": "snyk test && npm run test:karma && npm run test:jest",
     "test:karma": "karma start karma.conf.js",
     "test:karma:watch": "karma start karma.conf.js --no-single-run",
     "test:jest": "jest",
@@ -42,21 +42,22 @@
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",
     "jest": "^23.6.0",
-    "karma": "^1.1.2",
+    "karma": "^4.0.0",
     "karma-mocha": "^1.1.1",
     "karma-phantomjs-launcher": "^1.0.1",
     "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^1.8.0",
-    "mocha": "^3.0.0",
+    "karma-webpack": "^3.0.5",
+    "mocha": "^5.2.0",
     "ngreact": "^0.3.0",
     "react-addons-test-utils": "^15.3.0",
-    "react-dom": "^15.3.0",
+    "react-dom": "^16.4.2",
+    "snyk": "^1.110.2",
     "webpack": "^1.13.1"
   },
   "dependencies": {
-    "angular": "^1.5.11",
-    "prop-types": "^15.5.10",
-    "react": "^15.3.0"
+    "angular": "^1.6.9",
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0"
   },
   "jest": {
     "testRegex": "(src)/.*.jest-test.js$",
