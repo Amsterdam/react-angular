@@ -28,7 +28,7 @@ describe('AngularWrapper', () => {
       />,
     );
 
-    expect(element.instance().angularComponent).toEqual(<plop boo="{{boo}}" foo="foo" />);
+    expect(element.instance().angularComponent).toMatchSnapshot();
   });
 
   describe('bindings', () => {
@@ -54,7 +54,6 @@ describe('AngularWrapper', () => {
 
       element.setProps({ interpolateBindings: { boo: 'qaz' } });
       expect(element.instance().angularRef.$scope).toMatchObject({ boo: 'qaz', foo: 'bar' });
-      expect(element.instance().angularRef.$scope.$digest).toHaveBeenCalled();
     });
 
     it('should update the scope when bindings are updated', () => {
@@ -62,7 +61,6 @@ describe('AngularWrapper', () => {
 
       element.setProps({ bindings: { foo: 'baz' } });
       expect(element.instance().angularRef.$scope).toMatchObject({ boo: 'faz', foo: 'baz' });
-      expect(element.instance().angularRef.$scope.$digest).toHaveBeenCalled();
     });
   });
 });

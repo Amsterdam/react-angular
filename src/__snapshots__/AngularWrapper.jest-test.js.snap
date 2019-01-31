@@ -51,7 +51,9 @@ ShallowWrapper {
         "instance": null,
         "key": undefined,
         "nodeType": "host",
-        "props": Object {},
+        "props": Object {
+          "children": null,
+        },
         "ref": null,
         "rendered": null,
         "type": "plop",
@@ -94,7 +96,9 @@ ShallowWrapper {
           "instance": null,
           "key": undefined,
           "nodeType": "host",
-          "props": Object {},
+          "props": Object {
+            "children": null,
+          },
           "ref": null,
           "rendered": null,
           "type": "plop",
@@ -124,4 +128,11 @@ ShallowWrapper {
     "hydrateIn": undefined,
   },
 }
+`;
+
+exports[`AngularWrapper should set the proper angular attributes 1`] = `
+<plop
+  boo="{{boo}}"
+  foo="foo"
+/>
 `;
