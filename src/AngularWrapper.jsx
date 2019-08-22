@@ -1,6 +1,5 @@
 import React, { Component, createElement } from 'react';
 import PropTypes from 'prop-types';
-import angular from 'angular';
 import AngularTemplate, { ensureScopeAvailable, reactAngularModule } from './angularTemplate';
 import camelCaseToDash from './utils/camelCaseToDash';
 
@@ -11,26 +10,22 @@ class AngularWrapper extends Component {
 
   angularComponent = null;
 
-  componentWillMount() {
-    const { component } = this.props;
+  componentDidMount() {
+    const { moduleName, component, dependencies, angularInstance } = this.props;
     if (component) {
       this.buildAngularComponent();
     }
-  }
-
-  componentDidMount() {
-    const { moduleName, dependencies } = this.props;
-    angular
-      .module(moduleName, [...dependencies, reactAngularModule(false).name])
+    angularInstance
+      .module(moduleName, [...dependencies, reactAngularModule(angularInstance, false).name])
       .directive('exposeScope', () => ensureScopeAvailable())
       .run([
         'reactAngularProductionReady',
         (reactAngularProductionReady) => {
           reactAngularProductionReady();
           this.setState({ angularActive: true });
-        }
+        },
       ]);
-    angular.bootstrap(this.rootRef, [moduleName], { strictDi: true });
+    angularInstance.bootstrap(this.rootRef, [moduleName], { strictDi: true });
   }
 
   componentDidUpdate() {
@@ -84,7 +79,7 @@ class AngularWrapper extends Component {
   };
 
   render() {
-    const { interpolateBindings, bindings, children } = this.props;
+    const { interpolateBindings, bindings, children, angularInstance } = this.props;
     const { angularActive } = this.state;
 
     return (
@@ -94,6 +89,7 @@ class AngularWrapper extends Component {
         {
           angularActive && (
             <AngularTemplate
+              angularInstance={angularInstance}
               scope={{ ...interpolateBindings, ...bindings }}
               ref={this.setAngularRef}
             >
@@ -124,6 +120,8 @@ AngularWrapper.propTypes = {
   dependencies: PropTypes.arrayOf(PropTypes.string),
   bindings: PropTypes.shape({}),
   interpolateBindings: PropTypes.shape({}),
+  // eslint-disable-next-line react/forbid-prop-types,react/require-default-props
+  angularInstance: PropTypes.any,
 };
 
 export default AngularWrapper;

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import t from 'prop-types';
-import angular from 'angular';
 
 // Stolen from ReactCOMComponent (it does not expose it)
 function isCustomComponent(tagName, props) {
@@ -17,8 +16,8 @@ export function ensureScopeAvailable(link) {
 
 let debugInfoEnabled = null;
 
-export function reactAngularModule(usesNgReact = true) {
-  const raModule = angular.module('react-angular', usesNgReact ? ['react'] : [])
+export function reactAngularModule(angularInstance, usesNgReact = true) {
+  const raModule = angularInstance.module('react-angular', usesNgReact ? ['react'] : [])
     .config([
       '$compileProvider', ($compileProvider) => {
         debugInfoEnabled = $compileProvider.debugInfoEnabled.bind($compileProvider);
@@ -49,7 +48,7 @@ export function reactAngularModule(usesNgReact = true) {
 
 export default class ReactAngular extends React.Component {
   componentDidMount() {
-    const { controller, controllerAs, inject, isolate, scope, template, templateUrl } = this.props;
+    const { controller, controllerAs, inject, isolate, scope, template, templateUrl, angularInstance } = this.props;
 
     if (!this.context.$scope && !debugInfoEnabled) {
       console.warn(
@@ -76,13 +75,13 @@ export default class ReactAngular extends React.Component {
 
     this.$scope = scope ? parentScope.$new(isolate) : parentScope;
 
-    if (angular.isObject(scope)) {
-      angular.extend(this.$scope, scope);
+    if (angularInstance.isObject(scope)) {
+      angularInstance.extend(this.$scope, scope);
     }
 
     const actualTemplateFunc = template || (templateUrl ? $templateCache.get(templateUrl) : null);
 
-    const actualTemplate = angular.isFunction(actualTemplateFunc)
+    const actualTemplate = angularInstance.isFunction(actualTemplateFunc)
       ? actualTemplateFunc(inject)
       : actualTemplateFunc;
 
@@ -112,8 +111,8 @@ export default class ReactAngular extends React.Component {
   }
 
   render() {
-    const { wrapperTag, className, wrapperAttrs, children } = this.props;
-    const ref = (element) => this.$element = angular.element(element);
+    const { wrapperTag, className, wrapperAttrs, children, angularInstance } = this.props;
+    const ref = (element) => this.$element = angularInstance.element(element);
 
     if (children) {
       if (!React.isValidElement(children)) {

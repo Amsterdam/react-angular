@@ -55,7 +55,6 @@
     "webpack": "^1.13.1"
   },
   "dependencies": {
-    "angular": "^1.6.9",
     "prop-types": "^15.6.0",
     "react": "^16.2.0"
   },
